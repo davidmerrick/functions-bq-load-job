@@ -14,8 +14,8 @@ const bigquery = new BigQuery();
  * @param {object} context The event metadata.
  */
 exports.loadFile = (data, context) => {
-    const datasetId = 'finance';
-    const tableId = 'transactions';
+    const datasetId = process.env.BIGQUERY_DATASET;
+    const tableId = process.env.BIGQUERY_TABLE;
 
     const jobMetadata = {
         skipLeadingRows: 1,
