@@ -14,22 +14,23 @@ const bigquery = new BigQuery();
  * @param {object} context The event metadata.
  */
 exports.loadFile = (data, context) => {
-    const datasetId = process.env.BIGQUERY_DATASET;
-    const tableId = process.env.BIGQUERY_TABLE;
+  const datasetId = process.env.BIGQUERY_DATASET;
+  const tableId = process.env.BIGQUERY_TABLE;
 
-    const jobMetadata = {
-        skipLeadingRows: 1,
-        writeDisposition: 'WRITE_APPEND'
-    };
+  const jobMetadata = {
+    sourceFormat: 'NEWLINE_DELIMITED_JSON',
+    writeDisposition: 'WRITE_APPEND',
+    ignoreUnknownValues: true
+  };
 
-    // Loads data from a Google Cloud Storage file into the table
-    bigquery
-        .dataset(datasetId)
-        .table(tableId)
-        .load(storage.bucket(data.bucket).file(data.name), jobMetadata)
-        .catch(err => {
-            console.error('ERROR:', err);
-        });
+  // Loads data from a Google Cloud Storage file into the table
+  bigquery
+    .dataset(datasetId)
+    .table(tableId)
+    .load(storage.bucket(data.bucket).file(data.name), jobMetadata)
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
 
-    console.log(`Loading from gs://${data.bucket}/${data.name} into ${datasetId}.${tableId}`);
+  console.log(`Loading from gs://${data.bucket}/${data.name} into ${datasetId}.${tableId}`);
 };
